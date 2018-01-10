@@ -1,40 +1,23 @@
 #!/usr/bin/env python
 
-"""Shaped Tone Bursts for Peak Power and Headroom Tests (Tracks 35 – 68)
-
-Specification
-
-Additional bonus tracks were included on the CD which contain
-6.5-cycle shaped tone bursts whose energy is constrained to a one-
-third-octave bandwidth. These bursts are intended for use as a test
-stimulus  for  frequency-dependent  short-term  peak  power
-assessment and headroom of loudspeakers and electronics, and for
-testing the frequency response, energy decay and narrow-band
-phase/polarity of systems.
-
-The tone burst tracks should cover the frequency range from 10 Hz
-to 20 kHz at all the preferred IEC standard one-third-octave center
-frequencies. The bursts are repeated at one burst per second on the
-left channel and one burst per 10 seconds (0.1 burst per second) on
-the right channel. Each track lasts for 30 seconds. The low-
-repetition rate on the right channel makes these signals more
-suitable for systems that have long energy decay (reverberation)
-times such as large rooms and concert halls.
 """
 
-__version__     = "0.1"
-__status__      = "Development"
-__author__      = "Randy Rubin"
 
+"""
 
 import numpy as np
+
 from tools import dds, wav
 
+__version__ = "0.1"
+__status__ = "Development"
+__author__ = "Randy Rubin"
 
 FILENAME_PRE = 'py426b-track'
 FILENAME_MID = '-tone_burst_'
 FILENAME_POST = 'hz_-6dbfs_peak.wav'
 
+SAMPLE_RATE = dds.SAMPLE_RATE
 BURST_CYCLES = 6.5
 LCH_REPEAT_SEC = 1.0
 RCH_REPEAT_SEC = 10.0
@@ -78,14 +61,14 @@ freq_tab = [
     20000.0,
 ]
 
-for i in range(len(freq_tab)): 
+for i in range(len(freq_tab)):
 
     buffer = dds.tone_burst(freq_tab[i], (1 / freq_tab[i]) * BURST_CYCLES)
 
     lch = np.copy(buffer)
     rch = np.copy(buffer)
-    lch.resize(int(round(dds.SAMPLE_RATE * LCH_REPEAT_SEC)))
-    rch.resize(int(round(dds.SAMPLE_RATE * RCH_REPEAT_SEC)))
+    lch.resize(int(round(SAMPLE_RATE * LCH_REPEAT_SEC)))
+    rch.resize(int(round(SAMPLE_RATE * RCH_REPEAT_SEC)))
     lch = np.tile(lch, int(round(TRACK_LEN_SEC / LCH_REPEAT_SEC)))
     rch = np.tile(rch, int(round(TRACK_LEN_SEC / RCH_REPEAT_SEC)))
 
